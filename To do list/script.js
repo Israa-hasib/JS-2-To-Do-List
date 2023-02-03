@@ -13,7 +13,7 @@ let BASE_URL = "https://jsonplaceholder.typicode.com/todos/";
 
 // Fetch hämta todos
   window.onload = function() {
-    fetch('https://jsonplaceholder.typicode.com/todos?_limit=10')
+    fetch('https://jsonplaceholder.typicode.com/todos?_limit=20')
       .then(response => response.json())
       .then(todos => {
         // Hämta elementet
