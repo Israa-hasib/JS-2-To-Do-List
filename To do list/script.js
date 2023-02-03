@@ -1,3 +1,4 @@
+
 const todoList = document.getElementById("todoList");
 const listItem = document.createElement("li");
 const submitBtn = document.querySelector("#addtodo");
@@ -7,6 +8,8 @@ const errorMessage = document.querySelector("#errorMessage")
 const toDoArray= []
 const id = toDoArray.length +1
 let BASE_URL = "https://jsonplaceholder.typicode.com/todos/";
+
+
 
 // Fetch hämta todos
   window.onload = function() {
@@ -32,6 +35,8 @@ let BASE_URL = "https://jsonplaceholder.typicode.com/todos/";
     });
   }
   
+
+
 // Ta bort todo
   function removeTodo(element) {
     const todoId = element.parentNode.getAttribute("data-id");
@@ -52,6 +57,8 @@ let BASE_URL = "https://jsonplaceholder.typicode.com/todos/";
     });
   }
 
+
+
   // validering ingen tom todo
   function addTodo(e) {
     e.preventDefault()
@@ -63,6 +70,8 @@ let BASE_URL = "https://jsonplaceholder.typicode.com/todos/";
     }
     errorMessage.classList.add('d-none');
 
+
+
   // Skicka till databas
       const newTodo = {
         userId: 11,
@@ -70,12 +79,17 @@ let BASE_URL = "https://jsonplaceholder.typicode.com/todos/";
         completed: false,
     }
 
+
+
+
   // Lägg till
     let listItem = document.createElement("li");
     listItem.innerText = todoInput;
     // listItem.setAttribute("data-id", todo.id);
     listItem.innerHTML += ' <button onclick="removeTodo(this)">Ta bort</button>';
     todoList.appendChild(listItem);
+
+
 
   fetch('https://jsonplaceholder.typicode.com/todos', {
     method: 'POST',
