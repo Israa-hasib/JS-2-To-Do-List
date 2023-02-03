@@ -1,34 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>To Do List</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inlämningsuppgift</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  
-  <div class="wrapper">
-
+    <div class="wrapper">
     <div class="card">
-      <form>
-        <input type="text">
-        <button>Lägg till</button>
-      </form>
+    <form>
 
-      <div id="output">
+        <input type="text" class="todoInput" id="todoInput">
+        <button id="addtodo" >Lägg Till </button>
+    </form>
+    <div id="output">
 
         <!-- <div class="item">
           <p>Mjölk</p>
           <button>delete</button>
         </div> -->
-
+        <p id="errorMessage" class="d-none">Du måste skriva en Todo!</p>
+        <ul id="todoList"></ul>
       </div>
     </div>
-  </div>
+    </div>
 
-
-  <script src="script.js"></script>
+<script src="script.js"></script>
 </body>
 </html>

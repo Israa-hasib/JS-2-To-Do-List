@@ -1,126 +1,96 @@
+const todoList = document.getElementById("todoList");
+const listItem = document.createElement("li");
+const submitBtn = document.querySelector("#addtodo");
+const todoInput = document.querySelector("#todoInput")
+const clearText = document.querySelector('.todoInput');
+const errorMessage = document.querySelector("#errorMessage")
+const toDoArray= []
+const id = toDoArray.length +1
+let BASE_URL = "https://jsonplaceholder.typicode.com/todos/";
 
-const form = document.querySelector('.card form');
-const output = document.querySelector('#output')
-output.innerHTML = ''
+// Fetch hämta todos
+  window.onload = function() {
+    fetch('https://jsonplaceholder.typicode.com/todos?_limit=10')
+      .then(response => response.json())
+      .then(todos => {
+        // Hämta elementet
+        const todoList = document.getElementById("todoList");
+        todos.forEach(todo => {
+          toDoArray.push(todo)
+        })
+        console.log(toDoArray)
 
-let items = [
-  // {
-  //   id: crypto.randomUUID(),
-  //   name: 'Mjölk',
-  //   complete: true
-  // },
-  // {
-  //   id: crypto.randomUUID(),
-  //   name: 'Bröd',
-  //   complete: false
-  // },
-]
-
-
-
-
-// OM vi vill kunna ta bort en eventListener så "måste" vi skriva funktionen utanför
-// const test = (e) => {
-// asdfsfasfasf
-// }
-// form.addEventListener('submit', test)
-// form.removeEventListener('submit', test)
-
-// const buttons = document.querySelectorAll('.item button')
-
-// buttons.forEach(btn => {
-//   btn.addEventListener('click', () => {
-//     btn.parentElement.remove()
-//   })
-// })
-
-document.querySelector('#output').addEventListener('click', e => {
-  if(e.target.innerText === 'delete'){
-    e.target.parentElement.remove()
-    items = items.filter(item => item.id !== e.target.id)
-    localStorage.setItem('itemList', JSON.stringify(items))
-  }
-  if(e.target.innerText === 'edit'){
-
-  }
-
-  if(e.target.nodeName === 'P') {
-    e.target.style.textDecoration = 'line-through'
-  }
-  if(e.target.nodeName === 'DIV') {
-    // e.target.style.textDecoration = 'line-through'
-    // console.log(e.target.firstElementChild)
-    e.target.querySelector('p').classList.toggle('completed')
-  }
-})
-
-const createItemElement = (inputValue, id) => {
-
-  const item = document.createElement('div')
-  item.classList.add('item')
-
-  const p = document.createElement('p')
-  p.innerText = inputValue
-
-  const button = document.createElement('button')
-  button.innerText = 'delete'
-  button.id = id
-
-  // button.addEventListener('click', () => {
-  //   button.parentElement.remove()
-  // })
-
-
-  item.appendChild(p)
-  item.appendChild(button)
-
-
-  // document.querySelector('#output').appendChild(item)
-
-  return item
-}
-
-
-
-form.addEventListener('submit', e => {
-  e.preventDefault();
-  const input = form.querySelector('input[type=text]');
-  const inputValue = input.value;
-
-  if(inputValue.trim() === '') {
-    return
-  }
-
-  const newItem = {
-    id: crypto.randomUUID(),
-    name: inputValue,
-    complete: false
-  }
-  items.push(newItem)
-
-  const item = createItemElement(inputValue, newItem.id);
-  document.querySelector('#output').appendChild(item);
-  localStorage.setItem('itemList', JSON.stringify(items))
-
-
-  // input.value = '';
-  form.reset()
-
-})
-
-
-
-const loadItems = () => {
-  const storedItems = JSON.parse(localStorage.getItem('itemList'))
-  
-  items = []
-  if(storedItems) {
-    items = storedItems
+        // Lägg till todos
+        for (let i = 0; i < todos.length; i++) {
+          let todo = todos[i];
+          let listItem = document.createElement("li");
+          listItem.innerText = todo.title;
+          listItem.setAttribute("data-id", todo.id);
+          listItem.innerHTML += ' <button onclick="removeTodo(this)">Ta bort</button>';
+          todoList.appendChild(listItem);
+       }
+    });
   }
   
-  items.forEach(item => {
-    output.appendChild(createItemElement(item.name, item.id));
+// Ta bort todo
+  function removeTodo(element) {
+    const todoId = element.parentNode.getAttribute("data-id");
+    fetch(BASE_URL + todoId, {
+      method: 'DELETE'
+      
+    }).then(response => {
+        if (response.ok) {
+          console.log(response)
+          const index = toDoArray.indexOf(todoId => todoId == index)
+          toDoArray.splice(index, 1)
+
+            element.parentNode.remove();
+        }
+        else {
+          console.log("Fetch failed")
+        }
+    });
+  }
+
+  // validering ingen tom todo
+  function addTodo(e) {
+    e.preventDefault()
+    const todoInput = document.getElementById("todoInput").value;
+    if (todoInput.trim() === "") {
+      errorMessage.classList.remove('d-none');
+      return
+    // } else {  
+    }
+    errorMessage.classList.add('d-none');
+
+  // Skicka till databas
+      const newTodo = {
+        userId: 11,
+        title: todoInput,
+        completed: false,
+    }
+
+  // Lägg till
+    let listItem = document.createElement("li");
+    listItem.innerText = todoInput;
+    // listItem.setAttribute("data-id", todo.id);
+    listItem.innerHTML += ' <button onclick="removeTodo(this)">Ta bort</button>';
+    todoList.appendChild(listItem);
+
+  fetch('https://jsonplaceholder.typicode.com/todos', {
+    method: 'POST',
+    body: JSON.stringify(newTodo),
+    headers: {
+      "Content-type": "application/json; charset=UTF-8"
+    }
+  })
+  .then(response => response.json())
+  .then(json => {
+    toDoArray.push(json)
+    console.log(toDoArray)
+    console.log(json)
+    console.log("clear text")
+    clearText.value = "";
   })
 }
-
-loadItems()
+  submitBtn.addEventListener('click', addTodo)
